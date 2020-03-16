@@ -19,9 +19,12 @@ import no.ssb.dc.api.node.Validator;
 import no.ssb.dc.api.util.CommonUtils;
 import no.ssb.dc.core.executor.Executor;
 import no.ssb.dc.core.health.HealthWorkerMonitor;
+import no.ssb.dc.core.http.URLInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -51,6 +54,16 @@ public class GetHandler extends AbstractNodeHandler<Get> {
         node.headers().asMap().forEach((name, values) -> values.forEach(value -> requestBuilder.header(name, value)));
     }
 
+    // TODO refactor this into the Request.Builder.build()
+    static void checkIfOriginHeaderIsSet(ExecutionContext input, Get node, Request.Builder requestBuilder, String url) {
+        List<String> headerNames = new ArrayList<>();
+        headerNames.addAll(input.state(Headers.class).asMap().keySet());
+        headerNames.addAll(node.headers().asMap().keySet());
+        if (headerNames.stream().noneMatch(name -> "origin".equals(name.toLowerCase()))) {
+            requestBuilder.header("Origin", new URLInfo(url).getLocation());
+        }
+    }
+
     private String evaluatedUrl(ExecutionContext context) {
         ExpressionLanguage el = new ExpressionLanguage(context);
         return el.evaluateExpressions(node.url());
@@ -70,6 +83,7 @@ public class GetHandler extends AbstractNodeHandler<Get> {
 
         // evaluate url with expressions
         String url = evaluatedUrl(input);
+        checkIfOriginHeaderIsSet(input, node, requestBuilder, url);
         requestBuilder.url(url);
 
         // Expose node.url() to ByteBuddy Agent

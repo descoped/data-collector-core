@@ -8,8 +8,6 @@ import no.ssb.dc.api.context.ExecutionContext;
 import no.ssb.dc.api.http.Request;
 import no.ssb.dc.api.http.Response;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
@@ -103,23 +101,4 @@ class HttpClientExporter {
         }
     }
 
-    static class URLInfo {
-        private final URL url;
-
-        URLInfo(String url) {
-            try {
-                this.url = new URL(url);
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        String getLocation() {
-            return String.format("%s://%s%s", url.getProtocol(), url.getHost(), (-1 == url.getPort() || 80 == url.getPort() || 443 == url.getPort() ? "" : ":" + url.getPort()));
-        }
-
-        String getRequestPath() {
-            return url.getPath();
-        }
-    }
 }
