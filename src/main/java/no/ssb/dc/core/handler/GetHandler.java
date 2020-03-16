@@ -57,8 +57,12 @@ public class GetHandler extends AbstractNodeHandler<Get> {
     // TODO refactor this into the Request.Builder.build()
     static void checkIfOriginHeaderIsSet(ExecutionContext input, Get node, Request.Builder requestBuilder, String url) {
         List<String> headerNames = new ArrayList<>();
-        headerNames.addAll(input.state(Headers.class).asMap().keySet());
-        headerNames.addAll(node.headers().asMap().keySet());
+        if (input.state(Headers.class) != null) {
+            headerNames.addAll(input.state(Headers.class).asMap().keySet());
+        }
+        if (node.headers() != null) {
+            headerNames.addAll(node.headers().asMap().keySet());
+        }
         if (headerNames.stream().noneMatch(name -> "origin".equals(name.toLowerCase()))) {
             requestBuilder.header("Origin", new URLInfo(url).getLocation());
         }
