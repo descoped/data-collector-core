@@ -14,7 +14,7 @@ public class ContentStoreAgent {
     public static void install(Instrumentation inst) {
         new AgentBuilder.Default()
                 .type(hasSuperType(named(ContentStore.class.getName())))
-                .transform((builder, typeDescription, classLoader, javaModule) -> builder
+                .transform((builder, typeDescription, classLoader, javaModule, loaded) -> builder
                         .method(named("addPaginationDocument")).intercept(MethodDelegation.to(ContentStoreExporter.Paginate.class))
                         .method(named("bufferPaginationEntryDocument")).intercept(MethodDelegation.to(ContentStoreExporter.Entry.class))
                         .method(named("bufferDocument")).intercept(MethodDelegation.to(ContentStoreExporter.Document.class))

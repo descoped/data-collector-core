@@ -16,10 +16,11 @@ module no.ssb.dc.core {
     requires java.net.http;
 
     requires methanol;
+    requires kotlin.stdlib;
     requires okhttp3;
 
     requires org.slf4j;
-    requires jul_to_slf4j;
+    requires jul.to.slf4j;
 
     requires net.bytebuddy;
     requires net.bytebuddy.agent;
@@ -37,7 +38,7 @@ module no.ssb.dc.core {
     requires org.bouncycastle.provider;
     requires jackson.jq;
 
-    requires java.jwt;
+    requires com.auth0.jwt;
 
     requires simpleclient.common;
     requires simpleclient;

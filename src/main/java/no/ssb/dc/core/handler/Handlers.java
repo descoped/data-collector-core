@@ -158,7 +158,7 @@ public class Handlers {
         }
 
         static Set<Class<? extends AbstractHandler>> nodeHandlerDiscovery(String... packageNames) {
-            try (ScanResult scanResult = new ClassGraph().enableAnnotationInfo().whitelistPackages(packageNames).scan()) {
+            try (ScanResult scanResult = new ClassGraph().enableAnnotationInfo().acceptPackages(packageNames).scan()) {
 
                 ClassInfoList classInfoHandlerList = scanResult.getClassesWithAnnotation(Handler.class.getName());
                 ClassInfoList classInfoSupportHandlerList = scanResult.getClassesWithAnnotation(SupportHandler.class.getName());

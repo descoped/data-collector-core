@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -55,7 +57,7 @@ public class OkHttpResponseDelegate implements Response {
     @Override
     public <R> Optional<BodyHandler<R>> bodyHandler() {
         BodyHandler<R> handler = (BodyHandler<R>) bodyHandler;
-        return Optional.ofNullable(handler);
+        return ofNullable(handler);
     }
 
     @Override
@@ -94,11 +96,16 @@ public class OkHttpResponseDelegate implements Response {
                             null
                     );
                 } else {
-                    String body = httpResponse.body().string();
+                    String body = httpResponse.body() != null ? httpResponse.body().string() : "";
+
+                    Map<String, List<String>> headersMap = new LinkedHashMap<>();
+                    for (String name : httpResponse.headers().names()) {
+                        headersMap.put(name, httpResponse.headers().values(name));
+                    }
 
                     return new OkHttpResponseDelegate(
                             httpResponse.request().url().toString(),
-                            new Headers(httpResponse.headers().toMultimap()),
+                            new Headers(headersMap),
                             httpResponse.code(),
                             Arrays.copyOf(body.getBytes(), body.getBytes().length),
                             bodyHandler,

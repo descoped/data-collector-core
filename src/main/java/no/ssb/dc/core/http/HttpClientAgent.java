@@ -20,11 +20,11 @@ public class HttpClientAgent {
     public static void install(Instrumentation inst) {
         new AgentBuilder.Default()
                 .type(hasSuperType(named(Client.class.getName())))
-                .transform((builder, typeDescription, classLoader, javaModule) -> builder
+                .transform((builder, typeDescription, classLoader, javaModule, loaded) -> builder
                         .method(named("send")).intercept(MethodDelegation.to(HttpClientExporter.Send.class))
                         .method(named("sendAsync")).intercept(MethodDelegation.to(HttpClientExporter.SendAsync.class)))
                 .type(hasSuperClass(named("no.ssb.dc.core.handler.GetHandler")))
-                .transform((builder, typeDescription, classLoader, javaModule) -> builder
+                .transform((builder, typeDescription, classLoader, javaModule, loaded) -> builder
                         .method(named("execute")).intercept(MethodDelegation.to(HttpClientExporter.GetHandlerInterceptor.class)))
                 .installOn(inst);
     }
