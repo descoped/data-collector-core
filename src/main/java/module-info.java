@@ -1,15 +1,15 @@
-import no.ssb.dc.api.http.Client;
-import no.ssb.dc.api.http.Request;
-import no.ssb.dc.api.http.Response;
+import io.descoped.dc.api.http.Client;
+import io.descoped.dc.api.http.Request;
+import io.descoped.dc.api.http.Response;
 
-module no.ssb.dc.core {
-    requires no.ssb.config;
-    requires no.ssb.service.provider.api;
-    requires no.ssb.rawdata.api;
-    requires no.ssb.dc.api;
-    requires dapla.secrets.client.api;
-    requires dapla.secrets.provider.safe.configuration;
-    requires dapla.secrets.provider.dynamic.configuration;
+module io.descoped.dc.core {
+    requires io.descoped.dynamic.config;
+    requires io.descoped.service.provider.api;
+    requires io.descoped.rawdata.api;
+    requires io.descoped.dc.api;
+    requires secrets.client.api;
+    requires secrets.provider.safe.configuration;
+    requires secrets.provider.dynamic.configuration;
 
     requires java.logging;
     requires java.instrument;
@@ -44,24 +44,24 @@ module no.ssb.dc.core {
     requires simpleclient;
     requires simpleclient.hotspot;
 
-    provides Client.Builder with no.ssb.dc.core.http.HttpClientDelegate.ClientBuilder;
-    provides Request.Builder with no.ssb.dc.core.http.HttpRequestDelegate.RequestBuilder;
-    provides Response.Builder with no.ssb.dc.core.http.HttpResponseDelegate.ResponseBuilder;
+    provides Client.Builder with io.descoped.dc.core.http.HttpClientDelegate.ClientBuilder;
+    provides Request.Builder with io.descoped.dc.core.http.HttpRequestDelegate.RequestBuilder;
+    provides Response.Builder with io.descoped.dc.core.http.HttpResponseDelegate.ResponseBuilder;
 
-    opens no.ssb.dc.core;
-    opens no.ssb.dc.core.server;
-    opens no.ssb.dc.core.handler;
+    opens io.descoped.dc.core;
+    opens io.descoped.dc.core.server;
+    opens io.descoped.dc.core.handler;
 
-    exports no.ssb.dc.core.content;
-    exports no.ssb.dc.core.executor;
-    exports no.ssb.dc.core.handler;
-    exports no.ssb.dc.core.http;
-    exports no.ssb.dc.core.health;
-    exports no.ssb.dc.core.metrics;
-    exports no.ssb.dc.core.security;
-    exports no.ssb.dc.core.util;
+    exports io.descoped.dc.core.content;
+    exports io.descoped.dc.core.executor;
+    exports io.descoped.dc.core.handler;
+    exports io.descoped.dc.core.http;
+    exports io.descoped.dc.core.health;
+    exports io.descoped.dc.core.metrics;
+    exports io.descoped.dc.core.security;
+    exports io.descoped.dc.core.util;
 
     // TODO API requires access to Core test scope. Added CircumventIllegalModulePackage to allow package exports and opens.
-    exports no.ssb.dc.core.service;
-    exports no.ssb.dc.core.controller;
+    exports io.descoped.dc.core.service;
+    exports io.descoped.dc.core.controller;
 }
