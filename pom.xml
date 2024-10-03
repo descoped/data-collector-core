@@ -4,7 +4,7 @@
 
     <groupId>io.descoped.dc</groupId>
     <artifactId>data-collector-core</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
 
     <name>Data Collector Core</name>
@@ -46,7 +46,7 @@
         <connection>scm:git:git://github.com/descoped/data-collector-core.git</connection>
         <developerConnection>scm:git:git@github.com:descoped/data-collector-core.git</developerConnection>
         <url>https://github.com/descoped/data-collector-core/tree/master</url>
-        <tag>HEAD</tag>
+        <tag>2.0.0</tag>
     </scm>
 
     <distributionManagement>
@@ -334,7 +334,7 @@
                 <sonar.organization>descoped</sonar.organization>
                 <sonar.projectKey>descoped_${project.artifactId}</sonar.projectKey>
                 <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
-                <sonar.coverage.exclusions/>
+                <sonar.coverage.exclusions />
                 <sonar.coverage.jacoco.xmlReportPaths>
                     target/site/jacoco/jacoco.xml
                 </sonar.coverage.jacoco.xmlReportPaths>
