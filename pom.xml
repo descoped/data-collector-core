@@ -71,7 +71,7 @@
         <dependency>
             <groupId>io.descoped.secrets</groupId>
             <artifactId>secrets-provider-safe-configuration</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1</version>
         </dependency>
 
         <dependency>
