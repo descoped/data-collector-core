@@ -54,7 +54,7 @@ public class UnknownBodyLengthTest {
         AtomicReference<Throwable> failureCause = new AtomicReference<>();
         CompletableFuture<Response> response = Client.newClient().sendAsync(request)
                 .exceptionally(throwable -> {
-                    failureCause.compareAndSet(null, throwable);
+                    failureCause.compareAndSet(null, throwable); // TODO this test causes high cognitive load. hard to understand intention because of the swallowed exception
                     phaser.arrive();
                     return null;
                 });

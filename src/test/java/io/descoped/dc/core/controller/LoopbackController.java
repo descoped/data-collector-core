@@ -58,8 +58,8 @@ public class LoopbackController implements Controller {
 
         {
             ObjectNode childObjectNode = jsonParser.createObjectNode();
-            exchange.getRequestCookies().forEach((k, v) -> {
-                childObjectNode.put(k, v.getValue());
+            exchange.requestCookies().forEach(cookie -> {
+                childObjectNode.put(cookie.getName(), cookie.getValue());
             });
             objectNode.set("cookies", childObjectNode);
         }
@@ -105,8 +105,8 @@ public class LoopbackController implements Controller {
 
         {
             ObjectNode childObjectNode = jsonParser.createObjectNode();
-            exchange.getResponseCookies().forEach((k, v) -> {
-                childObjectNode.put(k, v.getValue());
+            exchange.responseCookies().forEach(cookie -> {
+                childObjectNode.put(cookie.getName(), cookie.getValue());
             });
             objectNode.set("response-cookies", childObjectNode);
         }

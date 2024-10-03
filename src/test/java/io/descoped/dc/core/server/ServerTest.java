@@ -6,6 +6,8 @@ import io.descoped.dc.test.server.TestServerExtension;
 import io.undertow.Undertow;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -14,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(TestServerExtension.class)
 public class ServerTest {
+
+    private static final Logger log = LoggerFactory.getLogger(ServerTest.class);
 
     @Inject
     TestServer server;
