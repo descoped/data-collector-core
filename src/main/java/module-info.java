@@ -32,7 +32,6 @@ module io.descoped.dc.core {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
     requires java.xml;
-    requires hystrix.core;
     requires io.github.classgraph;
     requires org.bouncycastle.pkix;
     requires org.bouncycastle.provider;
