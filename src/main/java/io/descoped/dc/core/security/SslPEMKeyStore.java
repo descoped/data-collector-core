@@ -19,6 +19,7 @@ import org.bouncycastle.pkcs.PKCSException;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import java.io.CharArrayReader;
 import java.io.IOException;
@@ -120,6 +121,7 @@ class SslPEMKeyStore implements SslKeyStore {
 
     static class BusinessSSLTrustManager implements X509TrustManager {
 
+        private final X509TrustManager defaultTrustManager;
         private final X509Certificate[] acceptedIssuers;
 
         BusinessSSLTrustManager(X509Certificate... acceptedIssuers) {
@@ -127,19 +129,62 @@ class SslPEMKeyStore implements SslKeyStore {
                 throw new IllegalStateException("Business SSL Certificate must be applied!");
             }
             this.acceptedIssuers = acceptedIssuers;
+
+            TrustManagerFactory tmf;
+            try {
+                tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                tmf.init((KeyStore) null);
+            } catch (NoSuchAlgorithmException | KeyStoreException e) {
+                throw new RuntimeException(e);
+            }
+
+            X509TrustManager x509Tm = null;
+            for (TrustManager tm : tmf.getTrustManagers()) {
+                if (tm instanceof X509TrustManager) {
+                    x509Tm = (X509TrustManager) tm;
+                    break;
+                }
+            }
+
+            if (x509Tm == null) {
+                throw new IllegalStateException("No X509TrustManager found");
+            }
+
+            this.defaultTrustManager = x509Tm;
         }
 
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            defaultTrustManager.checkClientTrusted(chain, authType);
+        }
+
+        private boolean isChainTrusted(X509Certificate[] chain) {
+            if (chain == null || chain.length == 0) {
+                return false;
+            }
+            for (X509Certificate cert : acceptedIssuers) {
+                if (cert.equals(chain[chain.length - 1])) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
         public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            try {
+                defaultTrustManager.checkServerTrusted(chain, authType);
+            } catch (CertificateException e) {
+                // If the default trust manager fails, check against our accepted issuers
+                if (!isChainTrusted(chain)) {
+                    throw e;
+                }
+            }
         }
 
         @Override
         public X509Certificate[] getAcceptedIssuers() {
-            return acceptedIssuers;
+            return acceptedIssuers.clone();
         }
     }
 }
