@@ -12,6 +12,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -42,6 +43,8 @@ public class XPathParser implements DocumentParserFeature {
     static XMLReader createSAXFactory() {
         try {
             SAXParserFactory sax = SAXParserFactory.newInstance();
+            // Disable external entities
+            sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             sax.setNamespaceAware(false);
             return sax.newSAXParser().getXMLReader();
         } catch (SAXException | ParserConfigurationException e) {
@@ -52,6 +55,13 @@ public class XPathParser implements DocumentParserFeature {
     static DocumentBuilder createDocumentBuilder() {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+            // Disable external entities
+            documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            documentBuilderFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            documentBuilderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            documentBuilderFactory.setExpandEntityReferences(false);
+
             documentBuilderFactory.setNamespaceAware(false);
             return documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
@@ -62,7 +72,14 @@ public class XPathParser implements DocumentParserFeature {
     @Override
     public byte[] serialize(Object document) {
         try (StringWriter writer = new StringWriter()) {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+            // Disable external DTDs and stylesheets
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
+            Transformer transformer = transformerFactory.newTransformer();
             transformer.transform(new DOMSource((Node) document), new StreamResult(writer));
             return writer.toString().getBytes();
         } catch (RuntimeException | Error e) {
