@@ -7,9 +7,9 @@ module io.descoped.dc.core {
     requires io.descoped.service.provider.api;
     requires io.descoped.rawdata.api;
     requires io.descoped.dc.api;
-    requires secrets.client.api;
-    requires secrets.provider.safe.configuration;
-    requires secrets.provider.dynamic.configuration;
+    requires io.descoped.secrets.client.api;
+    requires io.descoped.secrets.provider.safe.configuration;
+    requires io.descoped.secrets.provider.dynamic.configuration;
 
     requires java.logging;
     requires java.instrument;
