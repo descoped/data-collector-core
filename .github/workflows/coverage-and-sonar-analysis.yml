@@ -41,18 +41,7 @@ jobs:
             -Dsonar.projectKey=descoped_data-collector-core \
             -Dsonar.organization=descoped \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-            -X -Djacoco.verbose=true
-          
-          echo "Maven build completed. Checking for Jacoco report:"
-          ls -l target/site/jacoco/ || echo "Jacoco directory not found"
-          find . -name "jacoco.xml" || echo "No jacoco.xml found"
-
-      - name: Find Jacoco files
-        run: find . -name "*jacoco*.xml"
-
-      - name: Run tests
-        run: mvn test -P coverage
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: Show test results
         if: always()

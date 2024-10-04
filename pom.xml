@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -307,6 +308,7 @@
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
+                                <phase>test</phase>
                                 <configuration>
                                     <formats>
                                         <format>XML</format>
@@ -314,6 +316,19 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.5.0</version>
+                        <configuration>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <argLine>
+                                ${argLine}
+                                -XX:+EnableDynamicAgentLoading
+                                -Xmx1500m
+                            </argLine>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -326,7 +341,7 @@
                 <sonar.organization>descoped</sonar.organization>
                 <sonar.projectKey>descoped_${project.artifactId}</sonar.projectKey>
                 <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
-                <sonar.coverage.exclusions />
+                <sonar.coverage.exclusions/>
                 <sonar.coverage.jacoco.xmlReportPaths>
                     target/site/jacoco/jacoco.xml
                 </sonar.coverage.jacoco.xmlReportPaths>
